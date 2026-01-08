@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 19, 31, 36;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  font-family: var(--font-nunito), system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a2c32;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #37464f;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a5f6a;
+}
+
+/* Duolingo-style button press effect */
+@layer components {
+  .btn-primary {
+    @apply bg-duo-green text-white font-bold py-3 px-6 rounded-xl 
+           border-b-4 border-duo-green-dark 
+           hover:bg-duo-green-hover active:border-b-0 active:mt-1
+           transition-all duration-100;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent text-duo-blue font-bold py-3 px-6 rounded-xl 
+           border-2 border-duo-blue 
+           hover:bg-duo-blue/10 active:bg-duo-blue/20
+           transition-all duration-100;
+  }
+  
+  .card {
+    @apply bg-duo-card rounded-2xl border-2 border-duo-border p-6;
+  }
+  
+  .card-interactive {
+    @apply card border-b-4 hover:bg-duo-card/80 
+           active:border-b-2 active:mt-[2px] cursor-pointer
+           transition-all duration-100;
+  }
+}
+
+/* Progress bar animations */
+.progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+/* Lesson node styles for journey map */
+.lesson-node {
+  @apply relative w-16 h-16 rounded-full flex items-center justify-center
+         border-4 border-b-8 cursor-pointer transition-all duration-200;
+}
+
+.lesson-node-locked {
+  @apply bg-gray-600 border-gray-700 cursor-not-allowed;
+}
+
+.lesson-node-available {
+  @apply bg-duo-green border-duo-green-dark hover:scale-110;
+}
+
+.lesson-node-completed {
+  @apply bg-duo-yellow border-yellow-600;
+}
+
+/* Streak fire animation */
+@keyframes flame {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.1); }
+}
+
+.flame-icon {
+  animation: flame 0.6s ease-in-out infinite;
+}
