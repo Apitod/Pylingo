@@ -1,8 +1,8 @@
-// File: /home/apithods/Projects/Web/duolingo/frontend/src/app/lesson/[lessonId]/page.tsx
-import * as entry from '../../../../../src/app/lesson/[lessonId]/page.js'
+// File: /home/apithods/Projects/Web/duolingo/frontend/src/app/(main)/profile/page.tsx
+import * as entry from '../../../../../src/app/(main)/profile/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../src/app/lesson/[lessonId]/page.js')
+type TEntry = typeof import('../../../../../src/app/(main)/profile/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

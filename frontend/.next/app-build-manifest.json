@@ -31,15 +31,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/layout.js"
     ],
-    "/lesson/[lessonId]/page": [
+    "/(main)/profile/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/lesson/[lessonId]/page.js"
-    ],
-    "/(auth)/register/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(auth)/register/page.js"
+      "static/chunks/app/(main)/profile/page.js"
     ]
   }
 }

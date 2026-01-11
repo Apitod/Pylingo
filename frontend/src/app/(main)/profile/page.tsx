@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { Flame, Zap, Shield, Trophy, Calendar, Target, BookOpen, Star, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getProgress } from '@/lib/progress';
+import { authAPI } from '@/lib/api';
 
 // Types for profile
 interface UserProfile {
     username: string;
+    email?: string;
     total_xp: number;
     current_streak: number;
     longest_streak: number;
@@ -76,27 +78,57 @@ export default function ProfilePage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Use local progress for MVP
-        const progress = getProgress();
-        const league = progress.totalXp >= 10000 ? 'Emerald'
-            : progress.totalXp >= 5000 ? 'Ruby'
-                : progress.totalXp >= 2500 ? 'Sapphire'
-                    : progress.totalXp >= 1000 ? 'Gold'
-                        : progress.totalXp >= 500 ? 'Silver'
-                            : 'Bronze';
+        const fetchProfile = async () => {
+            try {
+                // Fetch user data from API
+                const user = await authAPI.getProfile();
 
-        setProfile({
-            username: 'You',
-            total_xp: progress.totalXp,
-            current_streak: progress.currentStreak,
-            longest_streak: progress.currentStreak,
-            league,
-            courses_completed: 0,
-            lessons_completed: progress.completedLessons.length,
-            challenges_completed: progress.completedChallenges.length,
-            member_since: new Date().toISOString(),
-        });
-        setIsLoading(false);
+                // Use local progress for extra stats not yet in API
+                const progress = getProgress();
+
+                // Calculate league based on TOTAL XP (from API or local if higher)
+                const totalXp = Math.max(user.total_xp, progress.totalXp);
+                const league = totalXp >= 10000 ? 'Emerald'
+                    : totalXp >= 5000 ? 'Ruby'
+                        : totalXp >= 2500 ? 'Sapphire'
+                            : totalXp >= 1000 ? 'Gold'
+                                : totalXp >= 500 ? 'Silver'
+                                    : 'Bronze';
+
+                setProfile({
+                    username: user.username,
+                    email: user.email,
+                    total_xp: totalXp,
+                    current_streak: Math.max(user.current_streak, progress.currentStreak),
+                    longest_streak: Math.max(user.longest_streak, progress.currentStreak), // Fallback
+                    league,
+                    courses_completed: 0,
+                    lessons_completed: progress.completedLessons.length,
+                    challenges_completed: progress.completedChallenges.length,
+                    member_since: new Date().toISOString(), // Backend doesn't send this yet in User model shown in api.ts
+                });
+            } catch (error) {
+                console.error('Failed to fetch profile:', error);
+                // Fallback to local data if API fails
+                const progress = getProgress();
+                setProfile({
+                    username: 'Learner',
+                    email: '',
+                    total_xp: progress.totalXp,
+                    current_streak: progress.currentStreak,
+                    longest_streak: progress.currentStreak,
+                    league: 'Bronze',
+                    courses_completed: 0,
+                    lessons_completed: progress.completedLessons.length,
+                    challenges_completed: progress.completedChallenges.length,
+                    member_since: new Date().toISOString(),
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfile();
     }, []);
 
     if (isLoading) {
@@ -116,7 +148,10 @@ export default function ProfilePage() {
             {/* Profile Header */}
             <div className="text-center mb-8">
                 <ProfileAvatar username={profile.username} />
-                <h1 className="text-3xl font-bold text-white mt-4 mb-2">{profile.username}</h1>
+                <h1 className="text-3xl font-bold text-white mt-4 mb-1">{profile.username}</h1>
+                {profile.email && (
+                    <p className="text-duo-text text-base mb-2">{profile.email}</p>
+                )}
 
                 {/* League Badge */}
                 <div

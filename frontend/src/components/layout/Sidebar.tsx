@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { BookOpen, Trophy, User, Flame, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { removeToken } from '@/lib/api';
 
 const navItems = [
     { href: '/learn', icon: BookOpen, label: 'Learn' },
@@ -16,6 +17,12 @@ const navItems = [
  */
 export function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        removeToken();
+        router.push('/login');
+    };
 
     return (
         <aside className="fixed left-0 top-0 h-full w-16 lg:w-64 bg-duo-card border-r border-duo-border flex flex-col">
@@ -61,8 +68,8 @@ export function Sidebar() {
                 </ul>
             </nav>
 
-            {/* Bottom section - Pro upgrade */}
-            <div className="p-4 border-t border-duo-border">
+            {/* Bottom section - Pro upgrade & Logout */}
+            <div className="p-4 border-t border-duo-border space-y-2">
                 <Link
                     href="/pro"
                     className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-duo-purple to-duo-blue text-white font-bold hover:opacity-90 transition-opacity"
@@ -70,6 +77,14 @@ export function Sidebar() {
                     <Shield className="w-5 h-5" />
                     <span className="hidden lg:block">Upgrade to Pro</span>
                 </Link>
+
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-duo-red font-bold hover:bg-duo-red/10 transition-colors"
+                >
+                    <div className="w-5 h-5 flex items-center justify-center font-mono font-bold text-lg">→</div>
+                    <span className="hidden lg:block">Log Out</span>
+                </button>
             </div>
         </aside>
     );

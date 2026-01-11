@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql://postgres:postgres@localhost:5432/pylingo"
     
     # Security
-    secret_key: str = "your-secret-key-change-in-production"
+    secret_key: str = "0fe3a4857018451d89b62359ed1f5526d8b4aba29d95b8995db245d172a381dd"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 10080  # 7 days
     
